@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <!--配置 SpringMVC 的前端控制器，对浏览器发送的请求统一进行处理-->
+    <servlet>
+        <servlet-name>springMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--通过初始化参数指定 SpringMVC 配置文件的位置和名称-->
+        <init-param>
+            <!--contextConfigLocation 为固定值-->
+            <param-name>contextConfigLocation</param-name>
+            <!--使用 classpath: 表示从类路径查找配置文件，java 工程默认 src 下, Maven 工程默认 src/main/resources 下-->
+            <param-value>classpath:springMVC.xml</param-value>
+        </init-param>
+        <!--
+            作为框架的核心组件，在启动过程中有大量的初始化操作要做
+            而这些操作放在第一次请求时才执行会严重影响访问速度
+            将前端控制器 DispatcherServlet 的初始化时间提前到服务启动时
+        -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springMVC</servlet-name>
+        <!--
+            设置 SpringMVC 的核心控制器所能处理的请求的请求路径
+            / 所匹配的请求可以是 /login 或 .html 或 .js 或 .css 方式的请求路径
+            但是 / 不能匹配 .jsp 请求路径的请求
+        -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+</web-app>
