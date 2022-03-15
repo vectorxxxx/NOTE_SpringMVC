@@ -8,6 +8,44 @@
 <body>
 <h1>首页</h1>
 <!--<a href="/target">访问指定页面target.html</a>-->
-<a th:href="@{/target}">访问指定页面target.html</a>
+<!--<a th:href="@{/target}">访问指定页面target.html</a>-->
+<!--<br/>-->
+<!--<a th:href="@{/requestMappingController/success}">访问指定页面success.html</a>-->
+<!--<br/>-->
+<!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的value属性&ndash;&gt;/test</a>-->
+<!--<br/>-->
+<!--<hr/>-->
+<!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的method属性&ndash;&gt;GET</a>-->
+<!--<br/>-->
+<!--<form th:action="@{/requestMappingController/test}" method="post">-->
+<!--    <input type="submit" value="测试RequestMapping注解的method属性&ndash;&gt;POST">-->
+<!--</form>-->
+<!--<br/>-->
+<!--<form th:action="@{/requestMappingController/test}" method="post">-->
+<!--    <input type="hidden" name="_method" value="put"/>-->
+<!--    <input type="submit" value="测试RequestMapping注解的method属性&ndash;&gt;PUT">-->
+<!--</form>-->
+<!--<br/>-->
+<!--<form th:action="@{/requestMappingController/test}" method="post">-->
+<!--    <input type="hidden" name="_method" value="delete"/>-->
+<!--    <input type="submit" value="测试RequestMapping注解的method属性&ndash;&gt;DELETE">-->
+<!--</form>-->
+<!--<br/>-->
+<!--<hr/>-->
+<a th:href="@{/requestMappingController/success}">测试GetMapping</a>
+<br/><br/>
+<form th:action="@{/requestMappingController/success}" method="post">
+    <input type="submit" value="测试PostMapping">
+</form>
+<br/>
+<form th:action="@{/requestMappingController/success}" method="post">
+       <input type="hidden" name="_method" value="put"/>
+    <input type="submit" value="测试PutMapping">
+</form>
+<br/>
+<form th:action="@{/requestMappingController/success}" method="post">
+       <input type="hidden" name="_method" value="delete"/>
+    <input type="submit" value="测试DeleteMapping">
+</form>
 </body>
 </html>
