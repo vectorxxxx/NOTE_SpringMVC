@@ -1,18 +1,31 @@
 package com.vectorx.springmvc.s00_helloworld;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/requestMappingController")
 public class RequestMappingController {
+
+    @RequestMapping(
+            value = {"/testHeaders"},
+            headers = {"Host=localhost:8080"}
+    )
+    public String testHeaders() {
+        return "success";
+    }
+
+    @RequestMapping(
+            value = {"/testParams"},
+            params = {"username!=admin"}
+    )
+    public String testParams() {
+        return "success";
+    }
+
     @GetMapping("/success")
     public String successGet() {
-       return "successget";
+        return "successget";
     }
 
     @PostMapping("/success")

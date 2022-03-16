@@ -88,7 +88,7 @@ public class RequestMappingController {
 - **匹配多个请求**：是一个字符串类型的数组，表示该请求映射能够匹配多个请求地址所对应的
 - **必须设置**：至少通过一个请求地址匹配请求映射
 
-#### 匹配多个请求
+### 匹配多个请求
 
 查看`@RequestMapping`注解的源码，会发现其`value`属性返回值为 String 类型的数组，这也说明了之所以`@RequestMapping`注解的`value`属性可以匹配多个请求的原因。通过为`value`属性指定多个值的方式，就可以对个多个请求建立请求映射
 
@@ -117,7 +117,7 @@ public String success() {
 
 
 
-## 4、Method 属性
+## 4、method 属性
 
 `@RequestMapping`注解的`method`属性有哪些用途呢？
 
@@ -147,7 +147,7 @@ public String success() {
 
 同时注意到`method`属性默认值为空数组，是否说明控制器方法不添加`method`属性时，不同的请求方法都能够匹配呢？
 
-#### 1）无 method 时匹配哪些请求方式？
+### 1）无 method 时匹配哪些请求方式？
 
 通过测试验证猜想
 
@@ -198,7 +198,7 @@ public String success() {
 
 > 存疑点：本来也想测试下`HEAD`、`PTACH`、`OPTIONS`和`TRACE`这几种不常用的请求方式的，但是发现 form 表单好像不支持这些请求方式。即使使用隐藏域，也会变成`GET`的请求方式。很疑惑这些请求方式要怎么模拟，有懂的求科普。这里记录下，留个印象，以待后续考古o(╯□╰)o
 
-#### 2）不满足 method 会怎样？
+### 2）不满足 method 会怎样？
 
 **值得注意的是**
 
@@ -229,7 +229,7 @@ public String success() {
 >
 > ![image-20220315234352240](https://s2.loli.net/2022/03/15/Yf47JRrjptCSmAZ.png)
 
-#### 3）派生注解
+### 3）派生注解
 
 对于处理指定请求方式的控制器方法，SpringMVC 中提供了`@RequestMapping`的派生注解
 
@@ -303,7 +303,7 @@ public class RequestMappingController {
 
 ![动画 (5)](https://s2.loli.net/2022/03/16/c2ZHN5GixC3bfIr.gif)
 
-#### 4）form 表单支持哪些请求方式？
+### 4）form 表单支持哪些请求方式？
 
 - 常用的请求方式有`GET`，`POST`，`PUT`，`DELETE`，但是目前浏览器只支持`GET`和`POST`（OS：刚才还有点疑惑的，这里好像“水落石出了”）
 - 若在 form 表单提交时，为`method`设置了其他请求方式的字符串（`PUT`或`DELETE`），则按照默认的`GET`请求方式处理
@@ -339,3 +339,178 @@ public class RequestMappingController {
 验证结果：显而易见
 
 ![动画 (7)](https://s2.loli.net/2022/03/16/1hxN7nOZQC3Azgc.gif)
+
+
+
+## 5、params 属性
+
+`@RequestMapping`注解的`params`属性通过请求的请求参数匹配请求映射
+
+它是一个字符串类型的数组，可以通过四种表达式设置请求参数和请求映射的匹配关系
+
+- `param`：要求请求映射所匹配的请求必须携带`param`请求参数
+- `!param`：要求请求映射所匹配的请求必须不能携带`param`请求参数
+- `param=value`：要求请求映射所匹配的请求必须携带`param`请求参数且`param=value`
+- `param!=value`：要求请求映射所匹配的请求必须携带`param`请求参数但是`param!=value`
+
+若当前请求满足`@RequestMapping`注解的`value`和`method`属性，但是不满足`params`属性，此时页面显示`400`错误，即请求不匹配
+
+### 1）param
+
+这里指定`params`的值指定为`username`，这就要求请求中必须携带`username`的请求参数
+
+```java
+@RequestMapping(
+    value = {"/testParams"},
+    params = {"username"}
+)
+public String testParams() {
+    return "success";
+}
+```
+
+前台测试代码：分别不加请求参数和加上请求参数，进行测试
+
+```html
+<a th:href="@{/requestMappingController/testParams}">测试RequestMapping注解的params属性==>testParams</a><br/>
+<a th:href="@{/requestMappingController/testParams?username=admin}">测试RequestMapping注解的params属性==>testParams?username=admin</a>
+```
+
+测试结果
+
+![动画 (8)](https://s2.loli.net/2022/03/17/2DLuKxzVQ5Wtsen.gif)
+
+可以发现，当配置了`params`属性并指定相应的请求参数时，请求中必须要携带相应的请求参数信息，否则前台就会报抛出`400`的错误信息，符合预期
+
+```js
+HTTP Status 400：Parameter conditions "username" not met for actual request parameters
+```
+
+不过在`Tymeleaf`中使用问号的方式会有错误提示，虽然不影响功能，但不想要错误提示的话，最好通过`(...,...)`的方式进行包裹，多个参数间通过`,`隔开
+
+```html
+<a th:href="@{/requestMappingController/testParams(username='admin', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin', password=123456)</a><br/>
+```
+
+测试验证
+
+![动画 (9)](https://s2.loli.net/2022/03/17/A6C2bowu37HvtRV.gif)
+
+可以发现，通过括号包裹的方式，`Tymeleaf`最终会帮我们将其解析成`?username=admin&password=123456`的格式
+
+> 实测发现，``testParams(username='admin', password=123456)`改成`testParams(username=admin, password=123456)`，即`admin`不加单引号也是可以的，这与课堂上所讲的并不一致，此点存疑
+
+### 2）!param
+
+这里将`params = {"username"}`中`username`前加上`!`即可，即`params = {"!username"}`，这就要求请求中的请求参数中不能携带`username`请求参数
+
+```java
+@RequestMapping(
+    value = {"/testParams"},
+    params = {"!username"}
+)
+public String testParams() {
+    return "success";
+}
+```
+
+测试结果
+
+![动画 (10)](https://s2.loli.net/2022/03/17/RncNoefqA2d3pGi.gif)
+
+可以发现，没有携带`username`请求参数的请求变得能够正常访问，而携带了`username`请求参数的请求反而出现了`400`的异常信息，符合预期
+
+```js
+HTTP Status 400：Parameter conditions "!username" not met for actual request parameters: username={admin}, password={123456}
+```
+
+### 3）param=value
+
+这里`params`的值指定为`username=admin`的形式，即要求请求中不仅要携带`username`的请求参数，且值为`admin`
+
+```java
+@RequestMapping(
+    value = {"/testParams"},
+    params = {"username=admin"}
+)
+public String testParams() {
+    return "success";
+}
+```
+
+测试结果
+
+![动画 (11)](https://s2.loli.net/2022/03/17/gbqTLYUxoBEZOA7.gif)
+
+可以发现，不携带`username`请求参数的请求和携带`username`请求参数但不为`admin`的请求，均提示`400`的请求错误，符合预期
+
+### 4）param!=value
+
+这里将`params`的值指定为`username!=admin`，，即要求请求中不仅要携带`username`的请求参数，且值不能为`admin`
+
+```java
+@RequestMapping(
+    value = {"/testParams"},
+    params = {"username!=admin"}
+)
+public String testParams() {
+    return "success";
+}
+```
+
+测试结果
+
+![动画 (12)](https://s2.loli.net/2022/03/17/enDHI5Npc3WUTfm.gif)
+
+实际测试结果发现：不携带`username`请求参数的请求和携带`username`请求参数但值不为`admin`的请求，可以正常访问；而携带`username`请求参数但值为`admin`的请求，不能正常访问（这一点不符合课程中讲解的内容，此点存疑）
+
+
+
+## 6、headers 属性
+
+`@RequestMapping`注解的`headers`属性通过请求的请求头信息匹配请求映射
+
+它是一个字符串类型的数组，可以通过四种表达式设置请求头信息和请求映射的匹配关系
+
+- `header`：要求请求映射所匹配的请求必须携带`header`请求头信息
+- `header`：要求请求映射所匹配的请求必须不能携带`header`请求头信息
+- `header=value`：要求请求映射所匹配的请求必须携带`header`请求头信息且`header=value`
+- `header!=value`：要求请求映射所匹配的请求必须携带`header`请求头信息且`header!=value`
+
+若当前请求满足`@RequestMapping`注解的`value`和`method`属性，但是不满足`headers`属性，此时页面显示`404`错误，即资源未找到
+
+测试代码
+
+```java
+@RequestMapping(
+    value = {"/testHeaders"},
+    headers = {"Host=localhost:8081"}
+)
+public String testHeaders() {
+    return "success";
+}
+```
+
+测试结果
+
+![动画 (13)](https://s2.loli.net/2022/03/17/4kLgyqEBFsDcAx1.gif)
+
+因为我本地`tomcat`启动端口是`8080`，所以是匹配不成功的，此时显示`404`错误，符合预期
+
+再将端口号修改为`8080`
+
+```java
+@RequestMapping(
+    value = {"/testHeaders"},
+    headers = {"Host=localhost:8080"}
+)
+public String testHeaders() {
+    return "success";
+}
+```
+
+测试结果
+
+![动画 (14)](https://s2.loli.net/2022/03/17/1MRg6UKVGHhrzTl.gif)
+
+这一次，因为端口号一致，所以成功跳转，符合预期

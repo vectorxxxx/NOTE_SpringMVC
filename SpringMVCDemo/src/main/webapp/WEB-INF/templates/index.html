@@ -15,6 +15,7 @@
 <!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的value属性&ndash;&gt;/test</a>-->
 <!--<br/>-->
 <!--<hr/>-->
+
 <!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的method属性&ndash;&gt;GET</a>-->
 <!--<br/>-->
 <!--<form th:action="@{/requestMappingController/test}" method="post">-->
@@ -32,20 +33,30 @@
 <!--</form>-->
 <!--<br/>-->
 <!--<hr/>-->
-<a th:href="@{/requestMappingController/success}">测试GetMapping</a>
-<br/><br/>
-<form th:action="@{/requestMappingController/success}" method="post">
-    <input type="submit" value="测试PostMapping">
-</form>
-<br/>
-<form th:action="@{/requestMappingController/success}" method="post">
-       <input type="hidden" name="_method" value="put"/>
-    <input type="submit" value="测试PutMapping">
-</form>
-<br/>
-<form th:action="@{/requestMappingController/success}" method="post">
-       <input type="hidden" name="_method" value="delete"/>
-    <input type="submit" value="测试DeleteMapping">
-</form>
+
+<!--<a th:href="@{/requestMappingController/success}">测试GetMapping</a>-->
+<!--<br/><br/>-->
+<!--<form th:action="@{/requestMappingController/success}" method="post">-->
+<!--    <input type="submit" value="测试PostMapping">-->
+<!--</form>-->
+<!--<br/>-->
+<!--<form th:action="@{/requestMappingController/success}" method="post">-->
+<!--       <input type="hidden" name="_method" value="put"/>-->
+<!--    <input type="submit" value="测试PutMapping">-->
+<!--</form>-->
+<!--<br/>-->
+<!--<form th:action="@{/requestMappingController/success}" method="post">-->
+<!--       <input type="hidden" name="_method" value="delete"/>-->
+<!--    <input type="submit" value="测试DeleteMapping">-->
+<!--</form>-->
+
+<a th:href="@{/requestMappingController/testParams}">测试RequestMapping注解的params属性==>testParams</a><br/>
+<a th:href="@{/requestMappingController/testParams?username=admin}">测试RequestMapping注解的params属性==>testParams?username=admin</a><br/>
+<a th:href="@{/requestMappingController/testParams(username='admin', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin',
+    password=123456)</a><br/>
+<a th:href="@{/requestMappingController/testParams(username='admin111', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin111',
+    password=123456)</a><br/>
+<a th:href="@{/requestMappingController/testHeaders}">测试RequestMapping注解的headers属性==>testHeaders</a><br/>
+
 </body>
 </html>
