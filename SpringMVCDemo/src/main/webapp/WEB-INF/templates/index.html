@@ -10,30 +10,34 @@
 <!--<a href="/target">访问指定页面target.html</a>-->
 <!--<a th:href="@{/target}">访问指定页面target.html</a>-->
 <!--<br/>-->
+
+<!--value属性：<br/>-->
 <!--<a th:href="@{/requestMappingController/success}">访问指定页面success.html</a>-->
 <!--<br/>-->
-<!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的value属性&ndash;&gt;/test</a>-->
+<!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的value属性/test</a>-->
 <!--<br/>-->
 <!--<hr/>-->
 
-<!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的method属性&ndash;&gt;GET</a>-->
+<!--method属性：<br/>-->
+<!--<a th:href="@{/requestMappingController/test}">测试RequestMapping注解的method属性GET</a>-->
 <!--<br/>-->
 <!--<form th:action="@{/requestMappingController/test}" method="post">-->
-<!--    <input type="submit" value="测试RequestMapping注解的method属性&ndash;&gt;POST">-->
+<!--    <input type="submit" value="测试RequestMapping注解的method属性POST">-->
 <!--</form>-->
 <!--<br/>-->
 <!--<form th:action="@{/requestMappingController/test}" method="post">-->
 <!--    <input type="hidden" name="_method" value="put"/>-->
-<!--    <input type="submit" value="测试RequestMapping注解的method属性&ndash;&gt;PUT">-->
+<!--    <input type="submit" value="测试RequestMapping注解的method属性PUT">-->
 <!--</form>-->
 <!--<br/>-->
 <!--<form th:action="@{/requestMappingController/test}" method="post">-->
 <!--    <input type="hidden" name="_method" value="delete"/>-->
-<!--    <input type="submit" value="测试RequestMapping注解的method属性&ndash;&gt;DELETE">-->
+<!--    <input type="submit" value="测试RequestMapping注解的method属性DELETE">-->
 <!--</form>-->
 <!--<br/>-->
 <!--<hr/>-->
 
+<!--派生注解：<br/>-->
 <!--<a th:href="@{/requestMappingController/success}">测试GetMapping</a>-->
 <!--<br/><br/>-->
 <!--<form th:action="@{/requestMappingController/success}" method="post">-->
@@ -50,13 +54,48 @@
 <!--    <input type="submit" value="测试DeleteMapping">-->
 <!--</form>-->
 
-<a th:href="@{/requestMappingController/testParams}">测试RequestMapping注解的params属性==>testParams</a><br/>
-<a th:href="@{/requestMappingController/testParams?username=admin}">测试RequestMapping注解的params属性==>testParams?username=admin</a><br/>
-<a th:href="@{/requestMappingController/testParams(username='admin', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin',
-    password=123456)</a><br/>
-<a th:href="@{/requestMappingController/testParams(username='admin111', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin111',
-    password=123456)</a><br/>
-<a th:href="@{/requestMappingController/testHeaders}">测试RequestMapping注解的headers属性==>testHeaders</a><br/>
+<!--params属性：<br/>-->
+<!--<a th:href="@{/requestMappingController/testParams}">测试RequestMapping注解的params属性==>testParams</a><br/>-->
+<!--<a th:href="@{/requestMappingController/testParams?username=admin}">测试RequestMapping注解的params属性==>testParams?username=admin</a><br/>-->
+<!--<a th:href="@{/requestMappingController/testParams(username='admin', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin',-->
+<!--    password=123456)</a><br/>-->
+<!--<a th:href="@{/requestMappingController/testParams(username='admin111', password=123456)}">测试RequestMapping注解的params属性==>testParams(username='admin111',-->
+<!--    password=123456)</a><br/>-->
 
+<!--headers属性：<br/>-->
+<!--<a th:href="@{/requestMappingController/testHeaders}">测试RequestMapping注解的headers属性==>testHeaders</a><br/>-->
+
+<!--Ant风格路径——?：<br/>-->
+<!--<a th:href="@{/requestMappingController/testAnt}">测试ant风格路径_/a?a/testAnt==>/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a?a/testAnt==>/a1a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/aaa/testAnt}">测试ant风格路径_/a?a/testAnt==>/aaa/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/aaaa/testAnt}">测试ant风格路径_/a?a/testAnt==>/aaaa/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a/a/testAnt}">测试ant风格路径_/a?a/testAnt==>/a/a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a?a/testAnt}">测试ant风格路径_/a?a/testAnt==>/a?a/testAnt</a><br/>-->
+
+<!--Ant风格路径——*：<br/>-->
+<!--<a th:href="@{/requestMappingController/aa/testAnt}">测试ant风格路径_/a*a/testAnt==>/aa/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a*a/testAnt==>/a1a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/aaaaa/testAnt}">测试ant风格路径_/a*a/testAnt==>/aaaaa/testAnt</a><br/>-->
+
+<!--Ant风格路径——**：<br/>-->
+<!--<a th:href="@{/requestMappingController/aa/testAnt}">测试ant风格路径_/a**a/testAnt==>/aa/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a1a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a11a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a**a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a**a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/aaaaa/testAnt}">测试ant风格路径_/a**a/testAnt==>/aaaaa/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a/d/e/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/d/e/a/testAnt</a><br/>-->
+
+<!--Ant风格路径——**：<br/>-->
+<!--<a th:href="@{/requestMappingController/testAnt}">测试ant风格路径_/a**a/testAnt==>/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/testAnt</a><br/>-->
+<!--<a th:href="@{/requestMappingController/a/a/a/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/a/a/a/testAnt</a><br/>-->
+
+路径中的占位符：<br/>
+<a th:href="@{/requestMappingController/testRest/1/admin}">测试路径中的占位符==>/testRest/1/admin</a><br/>
+<a th:href="@{/requestMappingController/testRest}">测试路径中的占位符==>/testRest</a><br/>
+<a th:href="@{/requestMappingController/testRest///}">测试路径中的占位符_空值==>/testRest///</a><br/>
+<a th:href="@{/requestMappingController/testRest/ / /}">测试路径中的占位符_空格==>/testRest/ / /</a><br/>
 </body>
 </html>

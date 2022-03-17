@@ -398,7 +398,7 @@ HTTP Status 400：Parameter conditions "username" not met for actual request par
 
 可以发现，通过括号包裹的方式，`Tymeleaf`最终会帮我们将其解析成`?username=admin&password=123456`的格式
 
-> 实测发现，``testParams(username='admin', password=123456)`改成`testParams(username=admin, password=123456)`，即`admin`不加单引号也是可以的，这与课堂上所讲的并不一致，此点存疑
+> 存疑点：实测发现，``testParams(username='admin', password=123456)`改成`testParams(username=admin, password=123456)`，即`admin`不加单引号也是可以的，这与课堂上所讲的并不一致，此点存疑
 
 ### 2）!param
 
@@ -446,7 +446,7 @@ public String testParams() {
 
 ### 4）param!=value
 
-这里将`params`的值指定为`username!=admin`，，即要求请求中不仅要携带`username`的请求参数，且值不能为`admin`
+这里将`params`的值指定为`username!=admin`，即要求请求中不仅要携带`username`的请求参数，且值不能为`admin`
 
 ```java
 @RequestMapping(
@@ -462,7 +462,9 @@ public String testParams() {
 
 ![动画 (12)](https://s2.loli.net/2022/03/17/enDHI5Npc3WUTfm.gif)
 
-实际测试结果发现：不携带`username`请求参数的请求和携带`username`请求参数但值不为`admin`的请求，可以正常访问；而携带`username`请求参数但值为`admin`的请求，不能正常访问（这一点不符合课程中讲解的内容，此点存疑）
+实际测试结果发现：不携带`username`请求参数的请求和携带`username`请求参数但值不为`admin`的请求，可以正常访问；而携带`username`请求参数但值为`admin`的请求，不能正常访问，不完全符合预期
+
+> 存疑点：不携带`username`请求参数的请求能够正常访问，这一点不符合课程中讲解的内容，此点存疑
 
 
 
@@ -514,3 +516,295 @@ public String testHeaders() {
 ![动画 (14)](https://s2.loli.net/2022/03/17/1MRg6UKVGHhrzTl.gif)
 
 这一次，因为端口号一致，所以成功跳转，符合预期
+
+
+
+## 7、Ant 风格路径
+
+- `?`：表示任意的单个字符
+- `*`：表示任意的0个或多个字符
+- `**`：表示任意的一层或多层目录。注意：在使用`**`时，只能使用`/**/xxx`的方式
+
+> 探子来报：`**`经实测，0 层目录也可以，这里严谨来说，应该是“表示任意层目录”
+
+### 1）?
+
+后台测试代码
+
+```java
+//ant风格路径
+@RequestMapping("/a?a/testAnt")
+public String testAnt() {
+    return "success";
+}
+```
+
+前台测试代码
+
+```html
+Ant风格路径——?：<br/>
+<a th:href="@{/requestMappingController/testAnt}">测试ant风格路径_/a?a/testAnt==>/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a?a/testAnt==>/a1a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/aaa/testAnt}">测试ant风格路径_/a?a/testAnt==>/aaa/testAnt</a><br/>
+<a th:href="@{/requestMappingController/aaaa/testAnt}">测试ant风格路径_/a?a/testAnt==>/aaaa/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a/a/testAnt}">测试ant风格路径_/a?a/testAnt==>/a/a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a?a/testAnt}">测试ant风格路径_/a?a/testAnt==>/a?a/testAnt</a><br/>
+```
+
+测试结果
+
+![动画 (15)](https://s2.loli.net/2022/03/17/JzVZ8NOnREIGi1t.gif)
+
+可以发现，`/a?a/testAnt`能够匹配的路径有
+
+- `/a1a/testAnt`
+- `/aaa/testAnt`
+
+不能匹配的路径有
+
+- `/testAnt`
+- `/aaaa/testAnt`
+- `/a/a/testAnt`
+- `/a?a/testAnt`
+
+即证明，`?`修饰的路径，有且必须有一个字符代替`?`的位置，即只能匹配单个字符，且不能为`/`和`?`这两种特殊字符（因为`/`和`?`在 url 路径中比较特殊，除此之外其他单个字符均可），符合预期
+
+### 2）*
+
+后台测试代码
+
+```java
+//ant风格路径
+@RequestMapping("/a*a/testAnt")
+public String testAnt() {
+    return "success";
+}
+```
+
+前台测试代码
+
+```html
+Ant风格路径——*：<br/>
+<a th:href="@{/requestMappingController/aa/testAnt}">测试ant风格路径_/a*a/testAnt==>/aa/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a*a/testAnt==>/a1a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/aaaaa/testAnt}">测试ant风格路径_/a*a/testAnt==>/aaaaa/testAnt</a><br/>
+```
+
+测试结果
+
+![动画 (16)](https://s2.loli.net/2022/03/17/I59C2dtfAmi8Pyx.gif)
+
+可以发现，`/a*a/testAnt`能够匹配的路径有
+
+- `/aa/testAnt`
+- `/a1a/testAnt`
+- `/aaaaa/testAnt`
+
+即证明，`*`修饰的路径，允许 0 个或多个字符代替`*`的位置，符合预期
+
+### 3）**
+
+上面说到，在使用`**`时，只能使用`/**/xxx`的方式，这里对其进行验证
+
+后台测试代码
+
+```java
+//ant风格路径
+@RequestMapping("/a**a/testAnt")
+public String testAnt() {
+    return "success";
+}
+```
+
+前台测试代码
+
+```html
+Ant风格路径——**：<br/>
+<a th:href="@{/requestMappingController/aa/testAnt}">测试ant风格路径_/a**a/testAnt==>/aa/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a1a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a1a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a11a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a**a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a**a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/aaaaa/testAnt}">测试ant风格路径_/a**a/testAnt==>/aaaaa/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a/d/e/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/d/e/a/testAnt</a><br/>
+```
+
+测试结果
+
+![动画 (17)](https://s2.loli.net/2022/03/17/YTpD34UtN9a8Euf.gif)
+
+可以发现，`/a**a/testAnt`能够匹配的路径有
+
+- `/aa/testAnt`
+- `/a1a/testAnt`
+- `/a11a/testAnt`
+- `/a**a/testAnt`
+- `/aaaaa/testAnt`
+
+不能匹配的路径有
+
+- `/a/a/testAnt`
+- `/a/d/e/a/testAnt`
+
+不符合预期
+
+> 存疑点：这里`/a**a/`多层路径不能匹配，而 0 个或多个字符能够匹配，这与课程中的“两颗星真的就是两颗星”不符，其匹配规则与`/a*a/`一致，即`/a**a/ <==> /a*a/`，两颗星与一颗星作用相同，此点存疑
+
+上述只是对`**`的错误用法时的匹配规则，下面才是真正对`**`的正确用法验证，请看
+
+后台测试代码
+
+```java
+//ant风格路径
+@RequestMapping("/**/testAnt")
+public String testAnt() {
+    return "success";
+}
+```
+
+前台测试代码
+
+```html
+Ant风格路径——**：<br/>
+<a th:href="@{/requestMappingController/testAnt}">测试ant风格路径_/a**a/testAnt==>/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/testAnt</a><br/>
+<a th:href="@{/requestMappingController/a/a/a/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/a/a/a/testAnt</a><br/>
+```
+
+测试结果
+
+![动画 (18)](https://s2.loli.net/2022/03/17/nDTEVK84rHW9kuC.gif)
+
+可以发现，不管中间添加多少层路径都是能够匹配成功的，符合预期
+
+
+
+## 8、路径中的占位符
+
+- 原始方式：`/deleteUser？id=1`
+- rest 方式：`/deleteuser/11`
+
+SpringMVC 路径中的占位符常用于 restful 风格中，当请求路径中将某些数据通过路径的方式传输到服务器中，就可以在相应的`@RequestMapping`注解的`value`属性中通过占位符`{xxx}`表示传输的数据，再通过`@PathVariable`注解，将占位符所表示的数据赋值给控制器方法的形参
+
+### 无注解形参
+
+- 测试条件：①只使用`{xxx}`占位符而不使用`@PathVariable`注解；②形参名称与请求中的占位符名称同名
+- 测试目的：①请求能否匹配成功；②同名形参是否能够接收到请求路径中的占位符
+
+后台测试代码
+
+```java
+@RequestMapping("/testRest/{id}/{username}")
+public String testRest(String id, String username) {
+    System.out.println("id=" + id + ", username=" + username);
+    return "success";
+}
+```
+
+前台测试代码
+
+```html
+路径中的占位符：<br/>
+<a th:href="@{/requestMappingController/testRest/1/admin}">测试路径中的占位符==>/testRest/1/admin</a><br/>
+```
+
+测试结果
+
+![动画 (19)](https://s2.loli.net/2022/03/17/t3CWIo91lONjUXE.gif)
+
+后台日志
+
+```java
+id=null, username=null
+```
+
+可以发现，请求能够匹配成功，但是同名形参无法接收到占位符的值
+
+### 带注解形参
+
+查看`PathVariable`注解源码
+
+![image-20220317223234047](https://s2.loli.net/2022/03/17/ybi6sNgSEBo1H5x.png)
+
+可以看到，它只能作用在方法参数上，那么怎么用就一目了然了
+
+后台测试代码
+
+```java
+@RequestMapping("/testRest/{id}/{username}")
+public String testRest(@PathVariable("id") String id, @PathVariable("username") String username) {
+    System.out.println("id=" + id + ", username=" + username);
+    return "success";
+}
+```
+
+测试结果
+
+![动画 (19)](https://s2.loli.net/2022/03/17/AIjc5M14vqXWRVt.gif)
+
+后台日志
+
+```java
+id=1, username=admin
+```
+
+可以发现，请求能够匹配成功，形参通过`@PathVariable`注解接收到了占位符的值
+
+### 不设置占位符
+
+```java
+<a th:href="@{/requestMappingController/testRest}">测试路径中的占位符==>/testRest</a><br/>
+```
+
+测试结果
+
+![动画 (20)](https://s2.loli.net/2022/03/17/8qwmGgoQjUsVLe5.gif)
+
+可以看到，没有占位符时，直接显示了`404`错误，即表示路径中存在占位符的控制器方法不能匹配未设置占位符的请求
+
+也就是说，路径中存在占位符的控制器方法，只能接收带了对应占位符的请求
+
+### 占位符为空值或空格
+
+```html
+<a th:href="@{/requestMappingController/testRest///}">测试路径中的占位符_空值==>/testRest///</a><br/>
+<a th:href="@{/requestMappingController/testRest/ / /}">测试路径中的占位符_空格==>/testRest/ / /</a><br/>
+```
+
+测试结果
+
+![动画 (21)](https://s2.loli.net/2022/03/17/QypObUg467AJzEw.gif)
+
+同时占位符为空格的情况是，后台打印了日志：`id= , username= `
+
+可以看到，
+
+- 空值匹配失败，报了`404`错误
+- 空格匹配成功，路劲中对其解析成了对应的`URL`编码，即`%20`
+
+### 小结
+
+由以上情况测试结果可以得出
+
+- SpringMVC 支持路径中含有占位符的形式
+- 占位符只能通过`@PathVariable`注解获取（就目前所学知识而言）
+- 占位符可以匹配特殊字符——空格，但不能匹配空字符
+
+
+
+## 总结
+
+`@RequestMapping`注解
+
+- 功能：<mark>将请求和处理请求的控制器方法关联起来，建立映射关系</mark>
+- 位置：作用在类上（请求路径的初始信息）；作用在方法上（请求路径的具体信息）
+- `value`属性：可以匹配多个请求路径，匹配失败报`404`
+- `method`属性：支持`GET`、`POST`、`PUT`、`DELETE`，默认不限制，匹配失败报`405`
+- `params`属性：四种方式，`param`、`!param`、`param==value`、`param!=value`，匹配失败报`400`
+- `headers`属性：四种方式，`header`、`!header`、`header==value`、`header!=value`，匹配失败报`400`
+- 支持 Ant 风格路径：`?`（单个字符）、`*`（0 或多个字符）和`**`（0 或多层路径）
+- 支持路径中的占位符：`{xxx}`占位符、`@PathVariable`赋值形参
+
+以下导图仅供参考
+
+![01-@RequestMapping](https://s2.loli.net/2022/03/17/gFfwxalQIjNbE3R.png)
