@@ -19,4 +19,9 @@ public class HelloController {
     public String toTarget() {
         return "target";
     }
+
+    @RequestMapping("/param")
+    public String param() {
+        return "param";
+    }
 }

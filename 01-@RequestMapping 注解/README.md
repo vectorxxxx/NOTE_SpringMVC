@@ -681,7 +681,7 @@ Ant风格路径——**：<br/>
 
 ## 8、路径中的占位符
 
-- 原始方式：`/deleteUser？id=1`
+- 原始方式：`/deleteUser?id=1`
 - rest 方式：`/deleteuser/11`
 
 SpringMVC 路径中的占位符常用于 restful 风格中，当请求路径中将某些数据通过路径的方式传输到服务器中，就可以在相应的`@RequestMapping`注解的`value`属性中通过占位符`{xxx}`表示传输的数据，再通过`@PathVariable`注解，将占位符所表示的数据赋值给控制器方法的形参
