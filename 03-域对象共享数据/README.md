@@ -8,8 +8,8 @@
 
 - `Request`：一次请求
 - `Session`：一次会话。从浏览器开启到浏览器关闭（只跟浏览器是否关闭有关，与服务器是否关闭无关）
-  - 钝化：浏览器未关闭而服务器关闭，`Session`数据序列化到磁盘上
-  - 活化：浏览器仍然关闭而服务器开启，将钝化内容读取到`Session`中
+  - **钝化**：浏览器未关闭而服务器关闭，`Session`数据序列化到磁盘上
+  - **活化**：浏览器仍然关闭而服务器开启，将钝化内容读取到`Session`中
 - `Application`/`Servlet Context`：上下文对象，整个应用范围。服务器开启时创建，服务器关闭时销毁，从头到尾只创建一次（只跟服务器是否关闭有关，与浏览器是否关闭无关）
 
 选择域对象时，应该选择能实现功能、范围最小的域对象
@@ -274,3 +274,23 @@ public String testApplication(HttpSession session) {
 测试结果
 
 ![动画  (10)](https://s2.loli.net/2022/03/21/b7nYHiERTPwAOSN.gif)
+
+
+
+## 总结
+
+域对象有三种：`request`（请求域）、`session`（会话域）和`application`（上下文）
+
+向`request`域对象共享数据方式：本质都是`ModelAndView`
+
+- `Servlet API`（不推荐）：`HttpServletRequest`
+- `ModelAndView`：需要返回自身
+- `Model`、`Map`、`ModelMap`：本质都是`BindingAwareModelMap`
+
+向`session`域共享数据：`HttpSession`
+
+向`application`域共享数据：`ServletContext`
+
+附上导图，仅供参考
+
+![03-域对象共享数据](https://s2.loli.net/2022/03/21/zY5s3IE9omMUZSN.png)
