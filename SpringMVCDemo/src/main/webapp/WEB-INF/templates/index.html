@@ -92,10 +92,20 @@
 <!--<a th:href="@{/requestMappingController/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/testAnt</a><br/>-->
 <!--<a th:href="@{/requestMappingController/a/a/a/a/testAnt}">测试ant风格路径_/a**a/testAnt==>/a/a/a/a/testAnt</a><br/>-->
 
-路径中的占位符：<br/>
-<a th:href="@{/requestMappingController/testRest/1/admin}">测试路径中的占位符==>/testRest/1/admin</a><br/>
-<a th:href="@{/requestMappingController/testRest}">测试路径中的占位符==>/testRest</a><br/>
-<a th:href="@{/requestMappingController/testRest///}">测试路径中的占位符_空值==>/testRest///</a><br/>
-<a th:href="@{/requestMappingController/testRest/ / /}">测试路径中的占位符_空格==>/testRest/ / /</a><br/>
+<!--路径中的占位符：<br/>-->
+<!--<a th:href="@{/requestMappingController/testRest/1/admin}">测试路径中的占位符==>/testRest/1/admin</a><br/>-->
+<!--<a th:href="@{/requestMappingController/testRest}">测试路径中的占位符==>/testRest</a><br/>-->
+<!--<a th:href="@{/requestMappingController/testRest///}">测试路径中的占位符_空值==>/testRest///</a><br/>-->
+<!--<a th:href="@{/requestMappingController/testRest/ / /}">测试路径中的占位符_空格==>/testRest/ / /</a><br/>-->
+
+<!--向 Request 域对象共享数据：<br/>-->
+<!--<a th:href="@{/scopeController/testRequestByServletAPI}">通过 Servlet API</a><br/>-->
+<!--<a th:href="@{/scopeController/testRequestByModelAndView}">通过 ModelAndView</a><br/>-->
+<!--<a th:href="@{/scopeController/testRequestByModel}">通过 Model</a><br/>-->
+<!--<a th:href="@{/scopeController/testRequestByMap}">通过 Map</a><br/>-->
+<!--<a th:href="@{/scopeController/testRequestByModelMap}">通过 ModelMap</a><br/>-->
+
+<!--<a th:href="@{/scopeController/testSession}">通过 Servlet API 向 Session 域对象共享数据</a><br/>-->
+<a th:href="@{/scopeController/testApplication}">通过 Servlet API 向 Application 域对象共享数据</a><br/>
 </body>
 </html>
