@@ -24,4 +24,9 @@ public class HelloController {
     public String param() {
         return "param";
     }
+
+    //@RequestMapping("/view")
+    //public String view() {
+    //    return "view";
+    //}
 }
