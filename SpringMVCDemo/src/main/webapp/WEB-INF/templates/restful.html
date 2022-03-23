@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>RESTful</title>
+</head>
+<body>
+<h1>RESTful 模拟操作用户信息</h1>
+<a th:href="@{/restfulcontroller/user}">查询所有用户信息</a><br/>
+<a th:href="@{/restfulcontroller/user/1}">根据用户ID查询用户信息</a><br/>
+<form th:action="@{/restfulcontroller/user}" method="post">
+    用户名：<input type="text" name="username"><br/>
+    密码：<input type="password" name="password"><br/>
+    性别：<input type="radio" name="gender" value="male">男<input type="radio" name="gender" value="female">女<br/>
+    年龄：<input type="number" name="age"><br/>
+    邮箱：<input type="text" name="email"><br/>
+    <input type="submit" value="添加用户">
+</form>
+<hr/>
+<form th:action="@{/restfulcontroller/user}" method="post">
+    <input type="hidden" name="_method" value="put">
+    用户名：<input type="text" name="username"><br/>
+    密码：<input type="password" name="password"><br/>
+    性别：<input type="radio" name="gender" value="male">男<input type="radio" name="gender" value="female">女<br/>
+    年龄：<input type="number" name="age"><br/>
+    邮箱：<input type="text" name="email"><br/>
+    <input type="submit" value="修改用户">
+</form>
+<hr/>
+<form th:action="@{/restfulcontroller/user}" method="post">
+    <input type="hidden" name="_method" value="delete">
+    用户名：<input type="text" name="username"><br/>
+    密码：<input type="password" name="password"><br/>
+    性别：<input type="radio" name="gender" value="male">男<input type="radio" name="gender" value="female">女<br/>
+    年龄：<input type="number" name="age"><br/>
+    邮箱：<input type="text" name="email"><br/>
+    <input type="submit" value="删除用户">
+</form>
+</body>
+</html>
