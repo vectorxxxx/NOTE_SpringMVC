@@ -1,0 +1,17 @@
+table {
+    width: 50%;
+    border: 1px black solid;
+    border-collapse: collapse;
+    /* 垂直水平居中 */
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* 间隔变色 */
+tbody tr:nth-child(odd) {
+    background-color: rgb(211, 216, 188);
+}
+
+th, td {
+    border: 1px black solid;
+}

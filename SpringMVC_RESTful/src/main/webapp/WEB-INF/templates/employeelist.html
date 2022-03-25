@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息</title>
+    <link th:href="@{/static/css/employeelist.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<table id="employeeTable">
+    <tr>
+        <th colspan="5">员工信息</th>
+    </tr>
+    <tr>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>性别</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="employee : ${employeeList}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.lastName}"></td>
+        <td th:text="${employee.email}"></td>
+        <td th:text="${employee.gender == 1 ? '男' : '女'}"></td>
+        <td>
+            <a href="">修改</a>
+            <!--<a th:href="@{/employeeController/employee/}+${employee.id}">删除</a>-->
+            <a @click="deleteEmployee" th:href="@{'/employeeController/employee/'+${employee.id}}">删除</a>
+        </td>
+    </tr>
+</table>
+<form method="post" id="deleteForm">
+    <input type="hidden" name="_method" value="delete"/>
+</form>
+<script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/employeelist.js}"></script>
+</body>
+</html>
