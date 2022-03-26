@@ -5,10 +5,7 @@ import com.vectorx.restful.dao.EmployeeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +15,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeDao employeeDao;
 
+    // ======列表功能======
     @GetMapping("/employee")
     public String getAllEmployee(Model model) {
         List<Employee> employeeList = employeeDao.getAll();
@@ -25,9 +23,36 @@ public class EmployeeController {
         return "employeelist";
     }
 
+    // ======删除功能======
     @DeleteMapping("/employee/{id}")
     public String deleteEmployee(@PathVariable("id") Integer id) {
         employeeDao.deleteById(id);
+        return "redirect:/employeeController/employee";
+    }
+
+    // ======添加功能======
+    @GetMapping("/toAdd")
+    public String toAdd() {
+        return "employeeadd";
+    }
+
+    @PostMapping("/employee")
+    public String addEmployee(Employee employee) {
+        employeeDao.save(employee);
+        return "redirect:/employeeController/employee";
+    }
+
+    // ======修改功能======
+    @GetMapping("/employee/{id}")
+    public String getEmployeeById(@PathVariable("id") Integer id, Model model) {
+        Employee employee = employeeDao.getById(id);
+        model.addAttribute("employee", employee);
+        return "employeeedit";
+    }
+
+    @PutMapping("/employee")
+    public String editEmployee(Employee employee) {
+        employeeDao.save(employee);
         return "redirect:/employeeController/employee";
     }
 }

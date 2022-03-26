@@ -511,9 +511,11 @@ var vue = new Vue({
     el: "#employeeTable",
     methods: {
         deleteEmployee: function (event) {
-            var deleteForm = document.getElementById("deleteForm");
-            deleteForm.action = event.target.href;
-            deleteForm.submit();
+            if (confirm('确认删除吗？')) {
+                var deleteForm = document.getElementById("deleteForm");
+                deleteForm.action = event.target.href;
+                deleteForm.submit();
+            }
             event.preventDefault();
         }
     }
@@ -529,4 +531,160 @@ SpringMVC 配置文件
 
 效果
 
-![动画  (0)](https://s2.loli.net/2022/03/26/3Var97NEBhb16tA.gif)
+![动画  (1)](https://s2.loli.net/2022/03/26/eiTmMd5RHN13n4r.gif)
+
+
+
+## 6、添加功能
+
+employeelist.html
+
+```html
+<!-- 略 -->
+<tr>
+    <th>ID</th>
+    <th>姓名</th>
+    <th>邮箱</th>
+    <th>性别</th>
+    <th>操作 <a th:href="@{/employeeController/toAdd}">添加</a><br/></th>
+</tr>
+<!-- 略 -->
+```
+
+employeeadd.html
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>添加员工</title>
+    </head>
+    <body>
+        <h1>添加员工</h1>
+        <form th:action="@{/employeeController/employee}" method="post">
+            姓名：<input type="text" name="lastName"/><br/>
+            邮箱：<input type="text" name="email"/><br/>
+            性别：<input type="radio" name="gender" value="1">男
+            <input type="radio" name="gender" value="0">女<br/>
+            <input type="submit" value="添加">
+        </form>
+    </body>
+</html>
+```
+
+EmployeeController.java
+
+```java
+@GetMapping("/toAdd")
+public String toAdd() {
+    return "employeeadd";
+}
+
+@PostMapping("/employee")
+public String addEmployee(Employee employee) {
+    employeeDao.save(employee);
+    return "redirect:/employeeController/employee";
+}
+```
+
+效果
+
+![动画  (2)](https://s2.loli.net/2022/03/26/hnBrF35UA2YS4Kq.gif)
+
+
+
+## 7、修改功能
+
+employeelist.html
+
+```html
+<!-- 略 -->
+<a th:href="@{/employeeController/employee/}+${employee.id}">修改</a>
+<!-- 略 -->
+```
+
+employeeedit.html
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>修改员工</title>
+    </head>
+    <body>
+        <h1>修改员工</h1>
+        <form th:action="@{/employeeController/employee}" method="post">
+            <input type="hidden" name="_method" th:value="put">
+            <input type="hidden" name="id" th:value="${employee.id}">
+            姓名：<input type="text" name="lastName" th:value="${employee.lastName}"/><br/>
+            邮箱：<input type="text" name="email" th:value="${employee.email}"/><br/>
+            性别：<input type="radio" name="gender" value="1" th:field="${employee.gender}">男
+            <input type="radio" name="gender" value="0" th:field="${employee.gender}">女<br/>
+            <input type="submit" value="修改">
+        </form>
+    </body>
+</html>
+```
+
+EmployeeController.java
+
+```java
+@GetMapping("/employee/{id}")
+public String getEmployeeById(@PathVariable("id") Integer id, Model model) {
+    Employee employee = employeeDao.getById(id);
+    model.addAttribute("employee", employee);
+    return "employeeedit";
+}
+
+@PutMapping("/employee")
+public String editEmployee(Employee employee) {
+    employeeDao.save(employee);
+    return "redirect:/employeeController/employee";
+}
+```
+
+效果
+
+![动画  (3)](https://s2.loli.net/2022/03/26/mkwscqLWnvau7DA.gif)
+
+
+
+## 注意点
+
+当前 SpringMVC 配置文件中存在这样几个配置
+
+```xml
+<!--配置视图控制器-->
+<mvc:view-controller path="/" view-name="index"></mvc:view-controller>
+
+<!--开放静态资源访问-->
+<mvc:default-servlet-handler/>
+
+<!--配置MVC注解驱动-->
+<mvc:annotation-driven/>
+```
+
+各个配置的作用
+
+- `view-controller`：简化页面跳转实现
+- `default-servlet-handler`：开放静态资源访问
+- `annotation-driven`：这里主要有 2 个作用
+  - 1）解决因配置视图控制器导致其他请求失效（404）的问题
+  - 2）解决因配置静态资源访问导致其他请求失效（404）的问题
+
+> **回忆**：在 *04-SpringMVC 视图* - *5、视图控制器 view-controller* 中有介绍过“MVC 注解驱动”功能作用
+
+`annotation-driven`需要与`view-controller`、`default-servlet-handler`配合使用
+
+`annotation-driven`与`view-controller`的关系
+
+- 当配置了`view-controller`而不配置`annotation-driven`，那么除了视图控制器中配置的请求，其他控制器方法将无法访问，即其他请求失效（404）
+- 当配置了`view-controller`也配置了`annotation-driven`，那么视图控制器中配置的请求和其他控制器方法都能够正常访问
+
+`annotation-driven`与`default-servlet-handler`的关系
+
+- 当配置了`default-servlet-handler`而不配置`annotation-driven`，那么所有请求都将交给`DefaultServlet`处理，`DispatcherServlet`将失效
+- 当配置了`default-servlet-handler`也配置了`annotation-driven`，那么所有请求将先交给`DispatcherServlet`处理，处理不了再交给`DefaultServlet`处理
+

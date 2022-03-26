@@ -15,7 +15,7 @@
         <th>姓名</th>
         <th>邮箱</th>
         <th>性别</th>
-        <th>操作</th>
+        <th>操作 <a th:href="@{/employeeController/toAdd}">添加</a><br/></th>
     </tr>
     <tr th:each="employee : ${employeeList}">
         <td th:text="${employee.id}"></td>
@@ -23,8 +23,7 @@
         <td th:text="${employee.email}"></td>
         <td th:text="${employee.gender == 1 ? '男' : '女'}"></td>
         <td>
-            <a href="">修改</a>
-            <!--<a th:href="@{/employeeController/employee/}+${employee.id}">删除</a>-->
+            <a th:href="@{/employeeController/employee/}+${employee.id}">修改</a>
             <a @click="deleteEmployee" th:href="@{'/employeeController/employee/'+${employee.id}}">删除</a>
         </td>
     </tr>
