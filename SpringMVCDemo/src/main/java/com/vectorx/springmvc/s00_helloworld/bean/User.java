@@ -7,6 +7,22 @@ public class User {
     private String age;
     private String email;
 
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String password, String gender, String age, String email) {
+        this.username = username;
+        this.password = password;
+        this.gender = gender;
+        this.age = age;
+        this.email = email;
+    }
+
     public String getUsername() {
         return username;
     }

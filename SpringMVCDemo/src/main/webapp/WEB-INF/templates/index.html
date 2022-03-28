@@ -106,5 +106,22 @@
 <!--<a th:href="@{/scopeController/testRequestByModelMap}">通过 ModelMap</a><br/>-->
 <!--<a th:href="@{/scopeController/testSession}">通过 Servlet API 向 Session 域对象共享数据</a><br/>-->
 <!--<a th:href="@{/scopeController/testApplication}">通过 Servlet API 向 Application 域对象共享数据</a><br/>-->
+
+<!--@RequestBody:<br/>-->
+<!--<form th:action="@{httpController/testRequestBody}" method="post">-->
+<!--    用户名：<input type="text" name="username"><br/>-->
+<!--    密码：<input type="password" name="password"><br/>-->
+<!--    <input type="submit" value="测试@RequestBody">-->
+<!--</form>-->
+<!--RequestEntity:<br/>-->
+<!--<form th:action="@{httpController/testRequestEntity}" method="post">-->
+<!--    用户名：<input type="text" name="username"><br/>-->
+<!--    密码：<input type="password" name="password"><br/>-->
+<!--    <input type="submit" value="测试RequestEntity">-->
+<!--</form>-->
+
+<!--<a th:href="@{/httpController/testResponseByServletAPI}">通过 HttpServletResponse 响应浏览器数据</a><br/>-->
+<!--<a th:href="@{/httpController/testResponseBody}">通过 @ResponseBody 响应浏览器数据</a><br/>-->
+<a th:href="@{/httpController/testResponseUser}">通过 @ResponseBody 响应 User</a><br/>
 </body>
 </html>

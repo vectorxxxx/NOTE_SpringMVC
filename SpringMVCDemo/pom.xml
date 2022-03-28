@@ -40,5 +40,11 @@
             <artifactId>thymeleaf-spring5</artifactId>
             <version>3.0.15.RELEASE</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-da tabind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.2</version>
+        </dependency>
     </dependencies>
 </project>
