@@ -89,6 +89,8 @@ requestBody: username=admin&password=123456
 
 ## 3、@ResponseBody
 
+`@ResponseBody`用于标识一个控制器方法，可以将该方法的返回值直接作为响应报文的响应体响应到浏览器
+
 ### 3.1、通过 HttpServletResponse 响应浏览器数据
 
 后台测试代码
@@ -164,7 +166,7 @@ public User testResponseUser() throws IOException {
 >
 > **A**：不要响应 Java 对象，而是转换成 Json 对象
 
-### 3.4、通过 @ResponseBody 响应 JSON
+### 3.4、SpringMVC 处理 JSON
 
 处理方式：引入`jackson`依赖
 
@@ -209,3 +211,275 @@ public User testResponseUser() throws IOException {
 >
 > - Json 对象中可以包含 Json 对象和 Json 数组，如`["username":"admin","password":"123456", "ext" : {"age": 18, "gender": "1"}]`、`["username":"admin","password":"123456", "ext" : ["age": 18, "gender": "1"]]`
 > - Json 数组中也可以包含 Json 对象和 Json 数组，如`{"username":"admin","password":"123456", "ext" : {"age": 18, "gender": "1"}}`、`{"username":"admin","password":"123456", "ext" : ["age": 18, "gender": "1"]}`
+
+### 3.5、SpringMVC 处理 AJAX
+
+后台测试代码
+
+```java
+@PostMapping("/testAxios")
+@ResponseBody
+public String testAxios(User user) {
+    return user.getUsername() + "," + user.getPassword();
+}
+```
+
+前台测试代码
+
+httpmessageconverter.html
+
+```html
+<div id="app">
+    <a @click="testAxios" th:href="@{/httpController/testAxios}">SpringMVC 操作 AJAX</a>
+</div>
+<script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/httpmessageconverter.js}"></script>
+```
+
+httpmessageconverter.js
+
+```js
+var vue = new Vue({
+    el: "#app",
+    methods: {
+        testAxios: function (event) {
+            testAxios(event.target.href);
+        }
+    }
+});
+
+function testAxios(url) {
+    axios({
+        method: "post",
+        url: url,
+        params: {
+            username: "admin",
+            password: "123456"
+        }
+    }).then(function (response) {
+        alert(response.data);
+    });
+    event.preventDefault();
+}
+```
+
+测试效果
+
+![动画  (7)](https://s2.loli.net/2022/03/29/2w6PCHSpkXMKFlJ.gif)
+
+### 3.6、@RestController 注解
+
+`@RestController`注解是 SpringMVC 提供的一个复合注解，标识在控制器的类上，就相当于为类添加了`@Controller`注解，并且为其中的每个方法添加了`@ResponseBody`注解
+
+这里简单修改下后台代码，将`@Controller`注解替换为`@RestController`注解，并去除控制器方法上的`@ResponseBody`注解
+
+```java
+@RestController
+@RequestMapping("/httpController")
+public class HttpController {
+    @PostMapping("/testAxios")
+    public String testAxios(User user) {
+        return user.getUsername() + "," + user.getPassword();
+    }
+}
+```
+
+测试效果
+
+![动画  (8)](https://s2.loli.net/2022/03/29/B1owhmPvlGeyfra.gif)
+
+可以发现，虽然控制器方法上没有加`@ResponseBody`注解，但是效果是一样的，依然可以将控制器方法的返回值作为响应报文的响应体返回给浏览器
+
+
+
+## 4、ResponseEntity
+
+`ResponseEntity`用于控制器方法的返回值类型，该控制器方法的返回值就是响应到浏览器的响应报文
+
+### 4.1、文件下载
+
+后台测试代码
+
+```java
+@Controller
+@RequestMapping("/fileUploadDownloadController")
+public class FileUploadDownloadController {
+    @GetMapping("/testDownload")
+    public ResponseEntity<byte[]> testDownload(HttpSession session) {
+        ServletContext context = session.getServletContext();
+        // 文件位置和名称
+        final String path = "/static/img/";
+        String fileName = "1.png";
+        // 响应体
+        String realPath = context.getRealPath(path + fileName);
+        byte[] bytes = readFile(realPath);
+        // 响应头
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        headers.set("Content-Disposition", "attachment;filename=" + fileName);
+        // 响应状态码
+        HttpStatus status = HttpStatus.OK;
+        // 响应实体
+        return new ResponseEntity<>(bytes, headers, status);
+    }
+
+    /**
+     * 读取文件流
+     *
+     * @param realPath
+     * @return
+     */
+    private byte[] readFile(String realPath) {
+        System.out.println(realPath);
+        final int initSize = 0;
+        byte[] bytes = new byte[initSize];
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(realPath));) {
+            bytes = new byte[bis.available()];
+            bis.read(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
+    }
+}
+```
+
+前台测试代码
+
+```html
+<a th:href="@{/fileUploadDownloadController/testDownload}">测试下载文件</a>
+```
+
+测试效果
+
+![动画  (8)](https://s2.loli.net/2022/03/30/N7wOZpi4IhgAt1l.gif)
+
+> **记低级失误**：
+>
+> 1、将
+>
+> ```java
+> @Controller
+> @RequestMapping("/fileUploadDownloadController")
+> ```
+>
+> 写成了
+>
+> ```java
+> @Controller("/fileUploadDownloadController")
+> ```
+>
+> 导致了请求直接报`404`找不到对应资源，需要格外注意！！！
+>
+> 2、读取文件代码缺少` bis.read(bytes);`导致字节数组只做了初始化而没有赋值，导致下载文件出现“损坏”的问题，需要格外注意！！！
+
+### 4.2、文件上传
+
+文件上传要求`form`表单的请求方式必须为`post`，并且添加属性`enctype="multipart/form-data"`
+
+SpringMVC 将上传的文件封装到`MultipartFile`对象中，通过此对象可以获取文件相关信息
+
+#### 1）添加依赖
+
+`commons-fileupload`的 jar 包是上传功能必不可少的
+
+```xml
+<dependency>
+    <groupId>commons-fileupload</groupId>
+    <artifactId>commons-fileupload</artifactId>
+    <version>1.4</version>
+</dependency>
+```
+
+#### 2）配置文件上传解析器
+
+SpringMVC 配置文件中添加`CommonsMultipartResolver`的依赖注入
+
+```xml
+<!--配置文件上传解析器，将上传文件自动封装为MutilpartFile对象-->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+```
+
+#### 3）后台代码
+
+使用`MultipartFile`对象接收上传文件
+
+```java
+@PostMapping("/testUpload")
+public String testUpload(MultipartFile photo, HttpSession session) throws IOException {
+    // 目标目录
+    String photoPath = session.getServletContext().getRealPath("photo");
+    File file = new File(photoPath);
+    if (!file.exists()) {
+        file.mkdir();
+    }
+    // 目标文件名
+    String fileName = photo.getOriginalFilename();
+    // 上传文件到服务器
+    photo.transferTo(new File(photoPath + File.separator + fileName));
+    return "success";
+}
+```
+
+#### 4）前台代码
+
+要求请求方式必须为`post`，并且`enctype`属性值必须为`multipart/form-data`
+
+> **Q**：enctype 是什么？
+>
+> **A**：enctype 即`encode type`，表示编码类型，它规定了在发送到服务器之前应该如何对表单数据进行编码
+>
+> 默认地，form 表单数据编码默认值为`application/x-www-form-urlencoded`。除此之外，`enctype`还可以设置为`text/plain`
+>
+> 这三种类型总结一下就是：
+>
+> - `application/x-www-form-urlencoded`：默认值，URL 编码
+> - `multipart/form-data`：文件类型
+> - `text/plain`：纯文本格式类型
+
+```html
+<form th:action="@{/fileUploadDownloadController/testUpload}" method="post" enctype="multipart/form-data">
+    头像：<input type="file" name="photo"/><br/>
+    <input type="submit" value="上传"/>
+</form>
+```
+
+测试结果
+
+![动画  (9)](https://s2.loli.net/2022/03/30/sUvlI9QcatMVdJf.gif)
+
+查看文件是否上传成功
+
+![image-20220330224959389](https://s2.loli.net/2022/03/30/s9y1CDr5V2WHiRd.png)
+
+#### 5）处理同名问题
+
+如果多次上传同名文件，会发现原文件会被同名新文件替换（覆盖）掉，如何解决这个问题呢？
+
+其实，处理同名问题有多种方式，这里采用`UUID`生成随机序列来实现，只需要做简单的修改即可
+
+```java
+@PostMapping("/testUpload")
+public String testUpload(MultipartFile photo, HttpSession session) throws IOException {
+    // 目标目录
+    String photoPath = session.getServletContext().getRealPath("photo");
+    File file = new File(photoPath);
+    if (!file.exists()) {
+        file.mkdir();
+    }
+    // 目标文件名
+    String srcName = photo.getOriginalFilename();
+    String suffixName = srcName.substring(srcName.lastIndexOf("."));
+    String prefixName = UUID.randomUUID().toString();
+    String destName = prefixName + suffixName;
+    // 上传文件到服务器
+    photo.transferTo(new File(photoPath + File.separator + destName));
+    return "success";
+}
+```
+
+再次测试
+
+![image-20220330230259507](https://s2.loli.net/2022/03/30/fGLcVTKmu6ZkPYn.png)
+
+可以看到，最新上传的文件名为遗传随机序列，这样就避免同名文件上传出现覆盖的问题了

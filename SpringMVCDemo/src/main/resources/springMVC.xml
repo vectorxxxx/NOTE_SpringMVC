@@ -38,6 +38,8 @@
     <mvc:view-controller path="/" view-name="index"></mvc:view-controller>
     <mvc:view-controller path="/view" view-name="view"></mvc:view-controller>
     <mvc:view-controller path="/restful" view-name="restful"></mvc:view-controller>
+    <mvc:view-controller path="/httpmessageconverter" view-name="httpmessageconverter"></mvc:view-controller>
+    <mvc:view-controller path="/fileuploaddownload" view-name="fileuploaddownload"></mvc:view-controller>
 
     <!--处理静态资源-->
     <mvc:default-servlet-handler/>
@@ -45,4 +47,7 @@
     <!--当SpringMVC中设置任何一个view-controller时，其他控制器中的请求映射将全部失效，此时需要在SpringMVC的核心配置文件中设置开启mvc注解驱动的标签：-->
     <!--开启 MVC 的注解驱动-->
     <mvc:annotation-driven/>
+
+    <!--配置文件上传解析器，将上传文件自动封装为MutilpartFile对象-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
 </beans>

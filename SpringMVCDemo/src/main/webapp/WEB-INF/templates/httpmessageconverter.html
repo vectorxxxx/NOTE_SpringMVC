@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HttpMessageConverter</title>
+</head>
+<body>
+<h1>HttpMessageConverter</h1>
+<!--@RequestBody:<br/>-->
+<!--<form th:action="@{httpController/testRequestBody}" method="post">-->
+<!--    用户名：<input type="text" name="username"><br/>-->
+<!--    密码：<input type="password" name="password"><br/>-->
+<!--    <input type="submit" value="测试@RequestBody">-->
+<!--</form>-->
+<!--RequestEntity:<br/>-->
+<!--<form th:action="@{httpController/testRequestEntity}" method="post">-->
+<!--    用户名：<input type="text" name="username"><br/>-->
+<!--    密码：<input type="password" name="password"><br/>-->
+<!--    <input type="submit" value="测试RequestEntity">-->
+<!--</form>-->
+
+<!--<a th:href="@{/httpController/testResponseByServletAPI}">通过 HttpServletResponse 响应浏览器数据</a><br/>-->
+<!--<a th:href="@{/httpController/testResponseBody}">通过 @ResponseBody 响应浏览器数据</a><br/>-->
+<!--<a th:href="@{/httpController/testResponseUser}">通过 @ResponseBody 响应 User</a><br/>-->
+
+<div id="app">
+    <a @click="testAxios" th:href="@{/httpController/testAxios}">SpringMVC 操作 AJAX</a>
+</div>
+<script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/httpmessageconverter.js}"></script>
+</body>
+</body>
+</html>

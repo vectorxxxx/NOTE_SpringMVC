@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller
+//@RestController
 @RequestMapping("/httpController")
 public class HttpController {
     @PostMapping("/testRequestBody")
@@ -39,6 +40,12 @@ public class HttpController {
     @ResponseBody
     public User testResponseUser() {
         return new User("admin", "123456");
+    }
+
+    @PostMapping("/testAxios")
+    @ResponseBody
+    public String testAxios(User user) {
+        return user.getUsername() + "," + user.getPassword();
     }
 
 }
