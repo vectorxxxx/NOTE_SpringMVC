@@ -478,4 +478,4 @@ public String testUpload(MultipartFile photo, HttpSession session) throws IOExce
 
 ![image-20220330230259507](https://s2.loli.net/2022/03/30/fGLcVTKmu6ZkPYn.png)
 
-可以看到，最新上传的文件名为遗传随机序列，这样就避免同名文件上传出现覆盖的问题了
+可以看到，最新上传的文件名为一串随机序列，这样就避免同名文件上传出现覆盖的问题了
