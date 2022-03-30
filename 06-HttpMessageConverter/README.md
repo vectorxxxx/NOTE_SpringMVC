@@ -358,19 +358,15 @@ public class FileUploadDownloadController {
 >
 > 1、将
 >
-> ```java
 > @Controller
 > @RequestMapping("/fileUploadDownloadController")
-> ```
->
+> 
 > 写成了
 >
-> ```java
 > @Controller("/fileUploadDownloadController")
-> ```
 >
 > 导致了请求直接报`404`找不到对应资源，需要格外注意！！！
->
+> 
 > 2、读取文件代码缺少` bis.read(bytes);`导致字节数组只做了初始化而没有赋值，导致下载文件出现“损坏”的问题，需要格外注意！！！
 
 ### 4.2、文件上传
