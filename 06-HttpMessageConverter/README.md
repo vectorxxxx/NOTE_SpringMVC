@@ -479,3 +479,23 @@ public String testUpload(MultipartFile photo, HttpSession session) throws IOExce
 ![image-20220330230259507](https://s2.loli.net/2022/03/30/fGLcVTKmu6ZkPYn.png)
 
 可以看到，最新上传的文件名为一串随机序列，这样就避免同名文件上传出现覆盖的问题了
+
+
+
+## 总结
+
+本节知识点
+
+HttpMessageConverter 请求报文转换器
+
+- 请求报文转为 JAVA 对象：@RequestBody、RequestEntity
+- JAVA 对象转为请求报文：@ResponseBody、ResponseEntity
+
+另外
+
+- `jackson-databind`：处理`json`
+- `commons-fileupload`：上传必备
+
+附上导图，仅供参考
+
+![06-HttpMessageConverter](https://s2.loli.net/2022/04/04/osh6P2AWMjmlYz9.png)
