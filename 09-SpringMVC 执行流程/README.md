@@ -372,7 +372,7 @@ DEBUG org.springframework.web.servlet.Dispatcherservlet - Completed 404 NOT_FOUN
 
 - ii.如果有配置，则访问目标资源（一般为静态资源，如：JS，CSS，HTML），找不到客户端也会展示404错误
 
-  ```console
+```console
   DEBUG org.springframework.web.servlet.Dispatcherservlet - GET "/springMVC/testHaha", parameters={}
   handler.SimpleUrlHandlerMapping Mapped to org.springframework.web.servlet.resource.DefaultServletHttpRequestHandlerDispatcherservlet - Completed 404 NOT_FOUND
   ```
