@@ -40,6 +40,7 @@
     <mvc:view-controller path="/restful" view-name="restful"></mvc:view-controller>
     <mvc:view-controller path="/httpmessageconverter" view-name="httpmessageconverter"></mvc:view-controller>
     <mvc:view-controller path="/fileuploaddownload" view-name="fileuploaddownload"></mvc:view-controller>
+    <mvc:view-controller path="/interceptor" view-name="interceptor"></mvc:view-controller>
 
     <!--处理静态资源-->
     <mvc:default-servlet-handler/>
@@ -50,4 +51,38 @@
 
     <!--配置文件上传解析器，将上传文件自动封装为MutilpartFile对象-->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+    <!--自定义拦截器-->
+    <!--<mvc:interceptors>-->
+    <!--    <bean id="myInterceptor" class="com.vectorx.springmvc.s00_helloworld.interceptor.MyInterceptor"></bean>-->
+    <!--</mvc:interceptors>-->
+    <!--<mvc:interceptors>-->
+    <!--    <ref bean="myInterceptor"></ref>-->
+    <!--</mvc:interceptors>-->
+    <!--<mvc:interceptors>-->
+    <!--    <mvc:interceptor>-->
+    <!--        <mvc:mapping path="/**"/>-->
+    <!--        <mvc:exclude-mapping path="/"/>-->
+    <!--        <ref bean="myInterceptor"></ref>-->
+    <!--    </mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+    <!--<mvc:interceptors>-->
+    <!--    <ref bean="myInterceptor"></ref>-->
+    <!--    <ref bean="myInterceptor2"></ref>-->
+    <!--</mvc:interceptors>-->
+
+    <!--<bean id="simpleMappingExceptionResolver"-->
+    <!--      class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
+    <!--    <property name="exceptionMappings">-->
+    <!--        <props>-->
+    <!--            &lt;!&ndash;-->
+    <!--                properties的键表示处理器方法执行过程中出现的异常-->
+    <!--                properties的值表示若出现指定异常，设置一个新的视图名称，跳转到指定页面-->
+    <!--            &ndash;&gt;-->
+    <!--            <prop key="java.lang.ArithmeticException">error</prop>-->
+    <!--        </props>-->
+    <!--    </property>-->
+    <!--    &lt;!&ndash;设置一个属性名，将出现的异常信息共享在请求域中&ndash;&gt;-->
+    <!--    <property name="exceptionAttribute" value="ex"></property>-->
+    <!--</bean>-->
 </beans>

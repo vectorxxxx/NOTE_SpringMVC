@@ -29,4 +29,10 @@ public class HelloController {
     //public String view() {
     //    return "view";
     //}
+
+    @RequestMapping("testException")
+    public String testException() {
+        int i = 1 / 0;
+        return "success";
+    }
 }
